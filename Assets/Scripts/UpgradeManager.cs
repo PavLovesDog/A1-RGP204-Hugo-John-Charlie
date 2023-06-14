@@ -55,6 +55,10 @@ namespace a1Jam
         public bool rocket2Equipped;
         public bool rocket3Equipped;
 
+        //Wing References
+        //public GameObject wings;
+        public bool hasWings;
+
         //Shoe References
         public GameObject youngShoe; // child
         public GameObject hightopShoe; // teen

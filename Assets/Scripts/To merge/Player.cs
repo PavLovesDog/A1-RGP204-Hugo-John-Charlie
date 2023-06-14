@@ -5,8 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float flightSpeed = 5f;
-    public float rotationSpeed = 2f;
-    public float thrusterForce = 100f; // Adjust the thruster force as needed
+    public float rotationSpeed = 4f;
+    public float thrusterForce = 1000f; // Adjust the thruster force as needed
 
     Rigidbody2D rb;
     float maxGravityScale = 3f;
@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
 
         // Adjust the rotation based on horizontal input
         float rotation = -horizontalInput * rotationSpeed;
-        rb.rotation = Mathf.Clamp(rb.rotation + rotation, -45f, 45f); // Clamp the rotation value between -45 and 45 degrees
+        rb.rotation = Mathf.Clamp(rb.rotation + rotation, -75f, 75f); // Clamp the rotation value between -45 and 45 degrees
 
         // Calculate the flight direction based on the rotation
         Vector2 flightDirection = Quaternion.Euler(0, 0, rb.rotation) * Vector2.right;

@@ -17,6 +17,14 @@ namespace a1Jam
         public bool canRotate = true;
         public bool isOnGround = false;
 
+        //Wing Varibales
+        public bool hasWings;
+        float maxLinearDrag = 3f;
+        float minLinearDrag = 0f;
+        float maxGravityScale = 12f;
+        float aKeyDownDuration = 0f;            // Track the duration the A key has been held down
+        public float thrusterForce = 10f;       // Adjust the thruster force as needed
+
         //Physics materials
         public PhysicsMaterial2D friction;
         public PhysicsMaterial2D noFriction;
@@ -45,12 +53,66 @@ namespace a1Jam
             // Vehicle Rotation ----------------------------------------------------------------------------------------------
             if (canRotate)
             {
-                // Get input from the left and right arrow keys or the 'a' and 'd' keys
-                float tilt = Input.GetAxis("Horizontal"); // This also tied top player movement...?
+                if (hasWings)
+                {
+                    tiltSpeed = 1f;
 
-                // Apply a rotation around the Z axis based on the input
-                transform.Rotate(0, 0, -tilt * tiltSpeed * Time.deltaTime);
+                    // Read user input
+                    float horizontalInput = Input.GetAxis("Horizontal");
+                    float verticalInput = Input.GetAxis("Vertical");
+                    bool isAKeyDown = Input.GetKey(KeyCode.A);           
+
+                    // Adjust the rotation based on horizontal input
+                    float rotation = -horizontalInput * tiltSpeed;
+                    vehicleRB.rotation = Mathf.Clamp(vehicleRB.rotation + rotation, -45f, 45f); // Clamp the rotation value between -45 and 45 degrees
+
+                    // Calculate the flight direction based on the rotation
+                    Vector2 flightDirection = Quaternion.Euler(0, 0, vehicleRB.rotation) * Vector2.right;
+
+                    // Adjust gravity scale based on tilt
+                    float tilt = Mathf.Clamp(horizontalInput, -4f, 4f) ; // Clamp the tilt value between -1 and 1
+                    float gravityScale = 8f + (tilt / 2f) * 8f; // Add the entire tilt value to the gravity scale
+
+                    vehicleRB.gravityScale = gravityScale;
+
+                    // Adjust linear drag based on gravity scale
+                    float linearDrag = Mathf.Lerp(maxLinearDrag, minLinearDrag, gravityScale / maxGravityScale);
+                    vehicleRB.drag = linearDrag;
+
+                    /*// Apply thruster force when A key is held down
+                    if (isAKeyDown)
+                     {
+                         Vector2 thrusterForceVector = flightDirection * thrusterForce;
+                         vehicleRB.AddForce(thrusterForceVector);
+                     }*/
+
+                    // Apply thruster force when A key is held down for 1 second
+                    if (isAKeyDown)
+                    {
+                        aKeyDownDuration += Time.deltaTime;
+
+                        if (aKeyDownDuration <= 1f)
+                        {
+                            Vector2 thrusterForceVector = flightDirection * thrusterForce;
+                            vehicleRB.AddForce(thrusterForceVector);
+                        }
+                    }
+                    else
+                    {
+                        // Reset the timer when the A key is released
+                        aKeyDownDuration = 0f;
+                    }
+                }
+                else 
+                {
+                    // Get input from the left and right arrow keys or the 'a' and 'd' keys
+                    float tilt = Input.GetAxis("Horizontal"); // This also tied top player movement...?
+
+                    // Apply a rotation around the Z axis based on the input
+                    transform.Rotate(0, 0, -tilt * tiltSpeed * Time.deltaTime);
+                }
             }
+
 
             //Check if vehicle flipped! ----------------------------------------------------------------------------------------
             for (int angle = 60; angle <= 120; angle += 15) // Loop from 45 degrees to 135 degrees in 15 degree increments
@@ -104,6 +166,10 @@ namespace a1Jam
                 canDrive = false; // no more accelerating in the air
                 collision.sharedMaterial = friction; // DOESNT DO ANYTHIN??
                 vehicleRB.sharedMaterial = friction; // set physics material for friction
+
+                // Reset to values before wings applied (temp)
+                hasWings = true;
+                vehicleRB.drag = 0;
             }
 
             // check if the ground has been hit
@@ -112,6 +178,10 @@ namespace a1Jam
                 canRotate = false; // stop all rotations
                 isOnGround = true;
                 GM.StartCoroutine(GM.Countdown());
+
+                // Reset to values before wings applied (temp)
+                hasWings = false;
+                vehicleRB.drag = 0;
             }
         }
 
@@ -123,6 +193,7 @@ namespace a1Jam
                 canRotate = false; // stop all rotations
                 isOnGround = true;
                 GM.StartCoroutine(GM.Countdown()); // start scoring message
+                hasWings = false;
             }
         }
     }
