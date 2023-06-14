@@ -14,6 +14,7 @@ namespace a1Jam
         public RocketControl rcScript;
         TimeManager tmScript;
         public UpgradeManager umScript;
+        public RandomPrefabPlacer rrpScript;
 
         //GameObjects
         public Collider2D flightCheck;
@@ -196,6 +197,9 @@ namespace a1Jam
             // Reset Driver ----------------------------------------------------------------------
             if (canReset)
             {
+                // reset launchzones across the map
+                rrpScript.PlaceRandomPrefabs();
+
                 //update Vegicle
                 vehicle = umScript.currentShoe;
 
@@ -260,6 +264,7 @@ namespace a1Jam
 
                 //Increment reset counter for time change
                 tmScript.resetCount++;
+
             }
         }
 
