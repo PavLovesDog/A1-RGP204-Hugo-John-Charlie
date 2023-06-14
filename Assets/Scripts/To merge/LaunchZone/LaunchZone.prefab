@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7777657442934255488}
   m_Layer: 0
   m_Name: LaunchZone
-  m_TagString: Untagged
+  m_TagString: LaunchZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 9999
-  m_Sprite: {fileID: 7482667652216324306, guid: a991d96fac083c34c96487836441f8b0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1bc6773ea79070b4a8af8cdc53a411d9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 770261b3181b00048bbf7e53fe3e2b8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchForce: {x: 0, y: 0}
+  launchForce: {x: 50, y: 100}
 --- !u!61 &7777657442934255488
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -116,7 +116,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 10.24, y: 10.24}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

@@ -67,12 +67,12 @@ namespace a1Jam
 
                     if (hit.collider.CompareTag("checkPoint"))
                     {
-                        continue; // If the ray hits the launch zone, ignore it
+                        continue; // Do stuff
                     }
 
                     if (hit.collider.CompareTag("LaunchZone"))
                     {
-                        //Do Stuff
+                        continue; // If the ray hits the launch zone, ignore it
                     }
 
                     canDrive = false; // stop movement
