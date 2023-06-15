@@ -91,6 +91,9 @@ namespace a1Jam
             tmScript = FindObjectOfType<TimeManager>();
             umScript = FindObjectOfType<UpgradeManager>();
 
+            //TODO !!!!!!!!!!!!!! JOHN, Set up script reference here, (if it's going to be attached to a single gameobject) !!!!!!!!!!!!!!!!!!!
+            //rrpScript = FindObjectOfType<RandomPrefabPlacer>();
+
             playerSpawnPoint = FindObjectOfType<SpawnMe>().gameObject;
             vehicle = FindObjectOfType<VehicleController>().gameObject; // load whatever vehicle is in the scene
 
