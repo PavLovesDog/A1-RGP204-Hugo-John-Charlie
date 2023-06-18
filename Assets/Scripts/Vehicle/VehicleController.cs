@@ -9,6 +9,9 @@ namespace a1Jam
         //Script References
         GameManager GM;
 
+        // For Unusual Aftermath
+        public UnusualAftermath unusualAftermath;
+
         //Vehicle Variables
         public float speed = 10.0f;
         public float tiltSpeed = 100.0f; // The speed at which the vehicle tilts
@@ -38,6 +41,7 @@ namespace a1Jam
             GM = FindObjectOfType<GameManager>();
             vehicleRB = GetComponent<Rigidbody2D>(); 
             rcColliders = GetComponentsInChildren<Collider2D>();
+
         }
     
         
@@ -55,7 +59,7 @@ namespace a1Jam
             {
                 if (hasWings)
                 {
-                    tiltSpeed = 1f;
+                    tiltSpeed = 2f;
 
                     // Read user input
                     float horizontalInput = Input.GetAxis("Horizontal");
@@ -91,7 +95,7 @@ namespace a1Jam
                     {
                         aKeyDownDuration += Time.deltaTime;
 
-                        if (aKeyDownDuration <= 1f)
+                        if (aKeyDownDuration <= 0.75f)
                         {
                             Vector2 thrusterForceVector = flightDirection * thrusterForce;
                             vehicleRB.AddForce(thrusterForceVector);
@@ -144,6 +148,8 @@ namespace a1Jam
                     GM.wipeoutText.gameObject.SetActive(true);
                 }
             }
+
+            if (isOnGround) { unusualAftermath.StartLerp(); }
         }
 
         // Function which sets the rollcages colliders of vehicle active or not
@@ -167,9 +173,9 @@ namespace a1Jam
                 collision.sharedMaterial = friction; // DOESNT DO ANYTHIN??
                 vehicleRB.sharedMaterial = friction; // set physics material for friction
 
-                // Reset to values before wings applied (temp)
+                // TODO: if the player bought wings, can trigger hasWings, else continue
+                // TEMP!, if player hits check point, attach wings
                 hasWings = true;
-                vehicleRB.drag = 0;
             }
 
             // check if the ground has been hit
@@ -179,9 +185,11 @@ namespace a1Jam
                 isOnGround = true;
                 GM.StartCoroutine(GM.Countdown());
 
-                // Reset to values before wings applied (temp)
+                // 
                 hasWings = false;
                 vehicleRB.drag = 0;
+
+                unusualAftermath.delayTimer = 0f;
             }
         }
 
@@ -193,7 +201,12 @@ namespace a1Jam
                 canRotate = false; // stop all rotations
                 isOnGround = true;
                 GM.StartCoroutine(GM.Countdown()); // start scoring message
+
+                // 
                 hasWings = false;
+                vehicleRB.drag = 0;
+
+                unusualAftermath.delayTimer = 0f;
             }
         }
     }
