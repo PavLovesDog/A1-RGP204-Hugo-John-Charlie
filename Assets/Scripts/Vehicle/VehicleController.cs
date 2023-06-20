@@ -180,7 +180,11 @@ namespace a1Jam
 
                 // TODO: if the player bought wings, can trigger hasWings, else continue
                 // TEMP!, if player hits check point, attach wings
-                hasWings = true;
+                if(transform.GetChild(7).gameObject.activeSelf) 
+                {
+                    hasWings = true;
+                }
+                
             }
 
             // check if the ground has been hit
