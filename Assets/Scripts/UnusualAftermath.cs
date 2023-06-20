@@ -2,8 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-// NOTE: tag set to checkPoint temporarily to not get wiped out when big foot stomps
-
 public class UnusualAftermath : MonoBehaviour
 {
     public Transform targetPosition;

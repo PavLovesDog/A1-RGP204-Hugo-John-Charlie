@@ -141,6 +141,11 @@ namespace a1Jam
                         continue; // If the ray hits the launch zone, ignore it
                     }
 
+                    if (hit.collider.CompareTag("BigFoot"))
+                    {
+                        continue; // This is code is pretty wet huh?
+                    }
+
                     canDrive = false; // stop movement
                     canRotate = false; // stop rotation
 
@@ -185,11 +190,15 @@ namespace a1Jam
                 isOnGround = true;
                 GM.StartCoroutine(GM.Countdown());
 
-                // 
+                unusualAftermath.delayTimer = 0f;
+            }
+
+            // Reset Values
+            if (collision.gameObject.tag == "BigFoot")
+            {
                 hasWings = false;
                 vehicleRB.drag = 0;
-
-                unusualAftermath.delayTimer = 0f;
+                vehicleRB.gravityScale = 8;
             }
         }
 
