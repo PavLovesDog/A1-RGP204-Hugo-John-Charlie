@@ -8,6 +8,7 @@ namespace a1Jam
     public class UpgradeManager : MonoBehaviour
     {
         GameManager GM;
+        VehicleController vehicleController;
 
         //current vehicle in use
         public GameObject currentShoe;
@@ -178,10 +179,11 @@ namespace a1Jam
         // select one rocket
         public void OneRocket()
         {
-            if(GM.totalScore >= rocket1Price)
+            if(GM.totalScore >= rocket1Price || hasRocket1)
             {
-                //minus points
-                GM.totalScore -= rocket1Price;
+                //minus points, and check if already own
+                if(!hasRocket1)
+                    GM.totalScore -= rocket1Price;
 
                 // check if other rockets are selected (ACTIVE)
                 if (rocket_2.activeSelf || rocket_Large.activeSelf)
@@ -211,10 +213,11 @@ namespace a1Jam
         // select 2 rockets
         public void TwoRocket()
         {
-            if(GM.totalScore >= rocket2Price)
+            if(GM.totalScore >= rocket2Price || hasRocket2)
             {
-                //Spend points
-                GM.totalScore -= rocket2Price;
+                //if not already own rocket, Spend points
+                if(!hasRocket2)
+                    GM.totalScore -= rocket2Price;
 
                 // check if other rockets are selected (ACTIVE)
                 if (rocket_1.activeSelf || rocket_Large.activeSelf)
@@ -244,10 +247,11 @@ namespace a1Jam
         // select large rockets
         public void LargeRocket()
         {
-            if (GM.totalScore >= rocket3Price)
+            if (GM.totalScore >= rocket3Price || hasRocket3)
             {
                 //Spend points
-                GM.totalScore -= rocket3Price;
+                if(!hasRocket3)
+                    GM.totalScore -= rocket3Price;
 
                 // check if any rockets are selected (ACTIVE)
                 if (rocket_1.activeSelf || rocket_2.activeSelf)
@@ -298,10 +302,15 @@ namespace a1Jam
             currentShoe = youngShoe;
             UpdateVehicleUpgrades();
 
+            // Update the vehicle script of selected shoe to hold the new reference for the Unusual Aftermath
+            vehicleController = currentShoe.GetComponent<VehicleController>();
+            vehicleController.UpdateUnusualAftermathScript(); 
+
             //Activate young shoe
             youngShoe.SetActive(true);
             GM.rtScript = FindObjectOfType<RotationTracker>(); 
             TransferRocketUpgrades();
+
         }
 
         // select hightop shoe
@@ -331,6 +340,10 @@ namespace a1Jam
                 //Update vehicle being used to correctly track upgrades
                 currentShoe = hightopShoe;
                 UpdateVehicleUpgrades();
+
+                // Update the vehicle script of selected shoe to hold the new reference for the Unusual Aftermath
+                vehicleController = currentShoe.GetComponent<VehicleController>();
+                vehicleController.UpdateUnusualAftermathScript();
 
                 //Activate young shoe
                 hightopShoe.SetActive(true);
@@ -367,6 +380,10 @@ namespace a1Jam
                 currentShoe = sportsShoe;
                 UpdateVehicleUpgrades();
 
+                // Update the vehicle script of selected shoe to hold the new reference for the Unusual Aftermath
+                vehicleController = currentShoe.GetComponent<VehicleController>();
+                vehicleController.UpdateUnusualAftermathScript();
+
                 //Activate young shoe
                 sportsShoe.SetActive(true);
                 GM.rtScript = FindObjectOfType<RotationTracker>();
@@ -401,6 +418,10 @@ namespace a1Jam
                 //Update vehicle being used to correctly track upgrades
                 currentShoe = oldShoe;
                 UpdateVehicleUpgrades();
+
+                // Update the vehicle script of selected shoe to hold the new reference for the Unusual Aftermath
+                vehicleController = currentShoe.GetComponent<VehicleController>();
+                vehicleController.UpdateUnusualAftermathScript();
 
                 //Activate young shoe
                 oldShoe.SetActive(true);

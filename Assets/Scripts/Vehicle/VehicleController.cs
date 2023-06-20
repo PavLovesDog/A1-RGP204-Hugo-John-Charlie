@@ -38,6 +38,8 @@ namespace a1Jam
     
         void Start()
         {
+            unusualAftermath = FindObjectOfType<UnusualAftermath>();
+
             GM = FindObjectOfType<GameManager>();
             vehicleRB = GetComponent<Rigidbody2D>(); 
             rcColliders = GetComponentsInChildren<Collider2D>();
@@ -221,6 +223,12 @@ namespace a1Jam
 
                 unusualAftermath.delayTimer = 0f;
             }
+        }
+
+        // Function to call when the player upgrades their car, to update the script attachment
+        public void UpdateUnusualAftermathScript()
+        {
+            unusualAftermath = FindObjectOfType<UnusualAftermath>();
         }
     }
 }
