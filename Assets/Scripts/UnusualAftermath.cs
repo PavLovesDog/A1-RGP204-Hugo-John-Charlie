@@ -57,12 +57,12 @@ public class UnusualAftermath : MonoBehaviour
             delayTimer += Time.deltaTime; // Increment the delay timer
         }
 
-        // TODO?? instead resetting position on m1 down, move it to when ever the game restarts?
-        if (Input.GetMouseButtonUp(0)) // GetMouseButtonDown(0) represents the left mouse button (Mouse1)
-        {
-            // Call your function here
-            ResetPosition();
-        }
+        //// TODO?? instead resetting position on m1 down, move it to when ever the game restarts?
+        //if (Input.GetMouseButtonUp(0)) // GetMouseButtonDown(0) represents the left mouse button (Mouse1)
+        //{
+        //    // Call your function here
+        //    ResetPosition();
+        //}
 
         if (isLerping)
         {

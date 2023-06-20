@@ -13,6 +13,7 @@ namespace a1Jam
         public RotationTracker rtScript;
         public RocketControl rcScript;
         TimeManager tmScript;
+        UnusualAftermath uaScript;
         public UpgradeManager umScript;
         public RandomPrefabPlacer rrpScript;
 
@@ -90,6 +91,7 @@ namespace a1Jam
             rcScript = FindObjectOfType<RocketControl>();
             tmScript = FindObjectOfType<TimeManager>();
             umScript = FindObjectOfType<UpgradeManager>();
+            uaScript = FindObjectOfType<UnusualAftermath>();
 
             //TODO !!!!!!!!!!!!!! JOHN, Set up script reference here, (if it's going to be attached to a single gameobject) !!!!!!!!!!!!!!!!!!!
             rrpScript = FindObjectOfType<RandomPrefabPlacer>();
@@ -249,7 +251,9 @@ namespace a1Jam
                 rtScript.fullRotations = 0;
                 flipsText.text = "Flips: " + numFlips;
 
-                
+                //Reset Big Foot position
+                uaScript.ResetPosition();
+
                 // reset score amount?
                 playerScore = 0;
 

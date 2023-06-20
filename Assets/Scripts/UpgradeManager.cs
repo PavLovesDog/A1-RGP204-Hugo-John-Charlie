@@ -58,7 +58,7 @@ namespace a1Jam
 
         //Wing References
         //public GameObject wings;
-        public bool hasWings;
+        //public bool hasWings;
 
         //Shoe References
         public GameObject youngShoe; // child
