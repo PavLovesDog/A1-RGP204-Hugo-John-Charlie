@@ -12,6 +12,9 @@ TagManager:
   - 2Rocket
   - rollcage
   - LaunchZone
+  - BigFoot
+  - Wings
+  - Ramp
   layers:
   - Default
   - TransparentFX

@@ -14,7 +14,11 @@ namespace a1Jam
 
         //Vehicle Variables
         public float speed = 10.0f;
-        public float tiltSpeed = 100.0f; // The speed at which the vehicle tilts
+        public float currentTiltSpeed = 100.0f; // The speed at which the vehicle tilts
+        public float youngTiltSpeed = 100;
+        public float hightopTiltSpeed = 140;
+        public float sportsTiltSpeed = 200;
+        public float oldTiltSpeed = 400;
         public Rigidbody2D vehicleRB;
         public bool canDrive = true;
         public bool canRotate = true;
@@ -22,6 +26,8 @@ namespace a1Jam
 
         //Wing Varibales
         public bool hasWings;
+        public bool affectDrag = false;
+        public float wingTiltSpeed = 2;
         float maxLinearDrag = 3f;
         float minLinearDrag = 0f;
         float maxGravityScale = 12f;
@@ -61,7 +67,7 @@ namespace a1Jam
             {
                 if (hasWings)
                 {
-                    tiltSpeed = 2f;
+                    currentTiltSpeed = wingTiltSpeed;
 
                     // Read user input
                     float horizontalInput = Input.GetAxis("Horizontal");
@@ -69,7 +75,7 @@ namespace a1Jam
                     bool isAKeyDown = Input.GetKey(KeyCode.A);           
 
                     // Adjust the rotation based on horizontal input
-                    float rotation = -horizontalInput * tiltSpeed;
+                    float rotation = -horizontalInput * currentTiltSpeed;
                     vehicleRB.rotation = Mathf.Clamp(vehicleRB.rotation + rotation, -45f, 45f); // Clamp the rotation value between -45 and 45 degrees
 
                     // Calculate the flight direction based on the rotation
@@ -81,9 +87,13 @@ namespace a1Jam
 
                     vehicleRB.gravityScale = gravityScale;
 
-                    // Adjust linear drag based on gravity scale
-                    float linearDrag = Mathf.Lerp(maxLinearDrag, minLinearDrag, gravityScale / maxGravityScale);
-                    vehicleRB.drag = linearDrag;
+                    //THISD NEEDS TO ONLY HAPPEN PAST THE CHECKPOINT
+                    if (affectDrag)
+                    {
+                        // Adjust linear drag based on gravity scale
+                        float linearDrag = Mathf.Lerp(maxLinearDrag, minLinearDrag, gravityScale / maxGravityScale);
+                        vehicleRB.drag = linearDrag;
+                    }
 
                     /*// Apply thruster force when A key is held down
                     if (isAKeyDown)
@@ -111,11 +121,29 @@ namespace a1Jam
                 }
                 else 
                 {
+                    // Check which vehicle is active and set its tilt speed
+                    if(gameObject.name == "Young_Shoe")
+                    {
+                        currentTiltSpeed = youngTiltSpeed;
+                    }
+                    else if(gameObject.name == "Hightop_Shoe")
+                    {
+                        currentTiltSpeed = hightopTiltSpeed;
+                    }
+                    else if (gameObject.name == "Sports_Shoe")
+                    {
+                        currentTiltSpeed = sportsTiltSpeed;
+                    }
+                    else if (gameObject.name == "Old_Shoe")
+                    {
+                        currentTiltSpeed = oldTiltSpeed;
+                    }
+
                     // Get input from the left and right arrow keys or the 'a' and 'd' keys
-                    float tilt = Input.GetAxis("Horizontal"); // This also tied top player movement...?
+                    float tilt = Input.GetAxis("Horizontal");
 
                     // Apply a rotation around the Z axis based on the input
-                    transform.Rotate(0, 0, -tilt * tiltSpeed * Time.deltaTime);
+                    transform.Rotate(0, 0, -tilt * currentTiltSpeed * Time.deltaTime);
                 }
             }
 
@@ -128,25 +156,36 @@ namespace a1Jam
     
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, rotatedDirection, raycastDistance); // Cast a ray at the current angle
                 Debug.DrawRay(transform.position, rotatedDirection * raycastDistance, Color.red); // Visualise
-    
+
+                // check for a crash
                 if (hit.collider != null) // If the ray hits an object (Note, player and shoe objects are labeled "ignore raycast")
                 {
                     Debug.Log(hit.collider.name);
+                    Debug.Log("Vehicle rays are touching the " + hit.collider.name);
 
-                    if (hit.collider.CompareTag("checkPoint"))
+                    // catch for certain objects to NOT trigger event
+                    if (hit.collider.CompareTag("checkPoint") ||
+                        hit.collider.CompareTag("LaunchZone") ||
+                        hit.collider.CompareTag("BigFoot"))
                     {
-                        continue; // Do stuff
+                        continue; // If the ray hits the checkpoint, ignore it
                     }
 
-                    if (hit.collider.CompareTag("LaunchZone"))
+                    //special case for wings, so we dont crash on ramp
+                    if (hit.collider.CompareTag("Ramp") && hasWings)
                     {
-                        continue; // If the ray hits the launch zone, ignore it
+                        continue;
                     }
 
-                    if (hit.collider.CompareTag("BigFoot"))
-                    {
-                        continue; // This is code is pretty wet huh?
-                    }
+                    //if (hit.collider.CompareTag("LaunchZone"))
+                    //{
+                    //    continue; // If the ray hits the launch zone, ignore it
+                    //}
+                    //
+                    //if (hit.collider.CompareTag("BigFoot"))
+                    //{
+                    //    continue; // This is code is pretty wet huh?
+                    //}
 
                     canDrive = false; // stop movement
                     canRotate = false; // stop rotation
@@ -176,6 +215,7 @@ namespace a1Jam
             // check if we're past the flight checkpoint
             if (collision.gameObject.tag == "checkPoint")
             {
+                affectDrag = true; // begin wind resistence
                 canDrive = false; // no more accelerating in the air
                 collision.sharedMaterial = friction; // DOESNT DO ANYTHIN??
                 vehicleRB.sharedMaterial = friction; // set physics material for friction
@@ -194,7 +234,7 @@ namespace a1Jam
             {
                 canRotate = false; // stop all rotations
                 isOnGround = true;
-                GM.StartCoroutine(GM.Countdown());
+                //GM.StartCoroutine(GM.Countdown());
 
                 unusualAftermath.delayTimer = 0f;
             }
@@ -202,7 +242,7 @@ namespace a1Jam
             // Reset Values
             if (collision.gameObject.tag == "BigFoot")
             {
-                hasWings = false;
+                //hasWings = false;
                 vehicleRB.drag = 0;
                 vehicleRB.gravityScale = 8;
             }
@@ -210,15 +250,16 @@ namespace a1Jam
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            
             // check if the ground has been hit
             if (collision.gameObject.tag == "Ground")
             {
                 canRotate = false; // stop all rotations
                 isOnGround = true;
-                GM.StartCoroutine(GM.Countdown()); // start scoring message
+                //GM.StartCoroutine(GM.Countdown()); // start scoring message
 
                 // 
-                hasWings = false;
+                //hasWings = false;
                 vehicleRB.drag = 0;
 
                 unusualAftermath.delayTimer = 0f;

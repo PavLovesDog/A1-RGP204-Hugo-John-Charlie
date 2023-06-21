@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 114655497}
   - component: {fileID: 114655499}
   - component: {fileID: 114655498}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rocket Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   m_Component:
   - component: {fileID: 560451735}
   - component: {fileID: 560451736}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rocket Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 602048330}
   - component: {fileID: 602048332}
   - component: {fileID: 602048331}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rocket Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -292,7 +292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 884906071}
   - component: {fileID: 884906072}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rocket 2 - old
   m_TagString: 2Rocket
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1040836998}
   - component: {fileID: 1040836999}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rocket Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -429,7 +429,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1158288564}
   - component: {fileID: 1158288565}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rocket Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -513,7 +513,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1261994135}
   - component: {fileID: 1261994136}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rocket3 - old
   m_TagString: LRocket
   m_Icon: {fileID: 0}
@@ -566,7 +566,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1522168206}
   - component: {fileID: 1522168207}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rocket1- old
   m_TagString: 1Rocket
   m_Icon: {fileID: 0}
@@ -620,7 +620,7 @@ GameObject:
   - component: {fileID: 1870468502}
   - component: {fileID: 1870468504}
   - component: {fileID: 1870468503}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rocket Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -755,7 +755,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -2.5059052, y: 4.882508}
+  m_Offset: {x: -2.5059052, y: 4.9533577}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -766,7 +766,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 6.0118103, y: 1.2161856}
+  m_Size: {x: 6.0118103, y: 1.0744858}
   m_EdgeRadius: 0
 --- !u!61 &275396370231218598
 BoxCollider2D:
@@ -831,7 +831,7 @@ GameObject:
   - component: {fileID: 275396370758856968}
   - component: {fileID: 275396370758856969}
   - component: {fileID: 275396370758856970}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wheel(1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -942,7 +942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &275396370785201526
 Transform:
   m_ObjectHideFlags: 0
@@ -1121,17 +1121,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unusualAftermath: {fileID: 0}
   speed: 12
-  tiltSpeed: 400
+  currentTiltSpeed: 100
+  youngTiltSpeed: 100
+  hightopTiltSpeed: 140
+  sportsTiltSpeed: 200
+  oldTiltSpeed: 400
   vehicleRB: {fileID: 275396370785201531}
   canDrive: 1
   canRotate: 1
   isOnGround: 0
   hasWings: 0
-  thrusterForce: 10
+  affectDrag: 0
+  wingTiltSpeed: 2
+  thrusterForce: 70
   friction: {fileID: 6200000, guid: be99d6a9c97ce4e41a03f412299f5b21, type: 2}
   noFriction: {fileID: 6200000, guid: 5aa615dee83339b479a879956fedf40a, type: 2}
   rcColliders: []
-  raycastDistance: 6
+  raycastDistance: 4.5
 --- !u!114 &275396370785201420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1158,7 +1164,7 @@ GameObject:
   - component: {fileID: 275396371342778229}
   - component: {fileID: 275396371342778230}
   - component: {fileID: 275396371342778231}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1257,7 +1263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1902999147182988735}
   - component: {fileID: 6106926148809642531}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wing 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1342,7 +1348,7 @@ GameObject:
   - component: {fileID: 8217783726978680898}
   m_Layer: 2
   m_Name: Wings - old
-  m_TagString: Untagged
+  m_TagString: Wings
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1374,7 +1380,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8577891420456473271}
   - component: {fileID: 17006879316097676}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wing 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1458,7 +1464,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7018590399802155076}
   - component: {fileID: 7573963687646050739}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Player Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}

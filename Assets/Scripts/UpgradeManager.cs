@@ -8,7 +8,7 @@ namespace a1Jam
     public class UpgradeManager : MonoBehaviour
     {
         GameManager GM;
-        VehicleController vehicleController;
+        VehicleController vcScript;
 
         //current vehicle in use
         public GameObject currentShoe;
@@ -27,22 +27,25 @@ namespace a1Jam
         public float shoeHightopPrice;
         public float shoeSportsPrice;
         public float shoeOldPrice;
-
         public float rocket1Price;
         public float rocket2Price;
         public float rocket3Price;
+        public float wingsPrice;
 
+        //TMP Text References
         //currency
         public TMP_Text currencyText;
         //shoes
-        public TMP_Text s_youngPrice;
-        public TMP_Text s_hightopPrice;
-        public TMP_Text s_sportsPrice;
-        public TMP_Text s_oldPrice;
+        public TMP_Text s_youngPriceText;
+        public TMP_Text s_hightopPriceText;
+        public TMP_Text s_sportsPriceText;
+        public TMP_Text s_oldPriceText;
         //rockets
-        public TMP_Text r_1Price;
-        public TMP_Text r_2Price;
-        public TMP_Text r_3Price;
+        public TMP_Text r_1PriceText;
+        public TMP_Text r_2PriceText;
+        public TMP_Text r_3PriceText;
+        //Wings
+        public TMP_Text wingsText;
 
 
         //Rocket References
@@ -57,23 +60,30 @@ namespace a1Jam
         public bool rocket3Equipped;
 
         //Wing References
-        //public GameObject wings;
-        //public bool hasWings;
+        public GameObject wings;
+        public bool ownsWings;
 
         //Shoe References
         public GameObject youngShoe; // child
         public GameObject hightopShoe; // teen
         public GameObject sportsShoe; // adult
         public GameObject oldShoe; // elderly
+        public bool hasYoungShoe;
+        public bool hasHightopShoe;
+        public bool hasSportsShoe;
+        public bool hasOldShoe;
     
         private void Start()
         {
             GM = FindObjectOfType<GameManager>();
+            vcScript = FindObjectOfType<VehicleController>();
             player = FindObjectOfType<PlayerController>().gameObject;
             playerLook = player.GetComponent<SpriteRenderer>();
 
             //always start with young shoe equipped
             youngShoe.SetActive(true);
+            currentShoe = youngShoe;
+            wings = FindChildWithTag(currentShoe.transform, "Wings"); // set wings object
 
             // Initial Setup
             currentShoe = FindObjectOfType<VehicleController>().gameObject;
@@ -85,18 +95,19 @@ namespace a1Jam
             hasRocket3 = false;
 
             //setup prices
-            s_youngPrice.text = "$" + shoeYoungPrice;
-            s_hightopPrice.text = "$" + shoeHightopPrice;
-            s_sportsPrice.text = "$" + shoeSportsPrice;
-            s_oldPrice.text = "$" + shoeOldPrice;
-            r_1Price.text = "$" + rocket1Price;
-            r_2Price.text = "$" + rocket2Price;
-            r_3Price.text = "$" + rocket3Price;
+            s_youngPriceText.text = "$" + shoeYoungPrice;
+            s_hightopPriceText.text = "$" + shoeHightopPrice;
+            s_sportsPriceText.text = "$" + shoeSportsPrice;
+            s_oldPriceText.text = "$" + shoeOldPrice;
+            r_1PriceText.text = "$" + rocket1Price;
+            r_2PriceText.text = "$" + rocket2Price;
+            r_3PriceText.text = "$" + rocket3Price;
+            wingsText.text = "$" + wingsPrice;
         }
 
         private void Update()
         {
-            currencyText.text = "$$$: " + Mathf.Ceil(GM.totalScore);
+            currencyText.text = "Points($): " + Mathf.Ceil(GM.totalScore);
         }
 
         public void UpdateVehicleUpgrades()
@@ -150,6 +161,37 @@ namespace a1Jam
 
         // UI BUTTON FUNCTIONS ----------------------------------------------------------
 
+        //WINGS -------------------------------
+        public void ActivateWings()
+        {
+            if (GM.totalScore >= wingsPrice || ownsWings)
+            {
+                //minus points, and check if already own
+                if (!ownsWings)
+                { 
+                    GM.totalScore -= wingsPrice;
+                    ownsWings = true;
+                }
+
+                //activate wings
+                wings = FindChildWithTag(currentShoe.transform, "Wings"); // find wings on current vehicle
+                wings.SetActive(true);
+                vcScript = FindObjectOfType<VehicleController>(); // find vehicle script of current vehicle
+                vcScript.hasWings = true;
+            }
+        }
+
+        public void DeactivateWings()
+        {
+            if(ownsWings && wings.activeSelf) // if players owns wings and they're active
+            {
+                wings = FindChildWithTag(currentShoe.transform, "Wings");
+                wings.SetActive(false);
+                vcScript = FindObjectOfType<VehicleController>(); // find vehicle script of current vehicle
+                vcScript.hasWings = false;
+            }
+        }
+
         //ROCKETS -----------------------------
         // select no rockets
         public void NoRockets()
@@ -201,7 +243,7 @@ namespace a1Jam
                 }
 
                 //change price in UI element
-                r_1Price.text = "Purchased";
+                r_1PriceText.text = "Purchased";
 
                 //Activate Upgrade
                 rocket_1.SetActive(true);
@@ -235,7 +277,7 @@ namespace a1Jam
                 }
 
                 //change price in UI element
-                r_2Price.text = "Purchased";
+                r_2PriceText.text = "Purchased";
 
                 //Activate Upgrade
                 rocket_2.SetActive(true);
@@ -270,7 +312,7 @@ namespace a1Jam
                 }
 
                 //change price in UI element
-                r_3Price.text = "Purchased";
+                r_3PriceText.text = "Purchased";
 
                 //Activate Upgrade
                 rocket_Large.SetActive(true);
@@ -303,8 +345,9 @@ namespace a1Jam
             UpdateVehicleUpgrades();
 
             // Update the vehicle script of selected shoe to hold the new reference for the Unusual Aftermath
-            vehicleController = currentShoe.GetComponent<VehicleController>();
-            vehicleController.UpdateUnusualAftermathScript(); 
+            vcScript = currentShoe.GetComponent<VehicleController>();
+            vcScript.UpdateUnusualAftermathScript();
+            //vcScript.canRotate = true;
 
             //Activate young shoe
             youngShoe.SetActive(true);
@@ -316,10 +359,17 @@ namespace a1Jam
         // select hightop shoe
         public void ActivateHightopShoe()
         {
-            if (GM.totalScore >= shoeHightopPrice)
+            if (GM.totalScore >= shoeHightopPrice || hasHightopShoe)
             {
                 //Spend points
-                GM.totalScore -= shoeHightopPrice;
+                if(!hasHightopShoe)
+                {
+                    GM.totalScore -= shoeHightopPrice;
+                    //change price in UI element
+                    s_hightopPriceText.text = "Purchased";
+                    hasHightopShoe = true;
+                }
+
                 //check for other vehicle active status
                 if (youngShoe.activeSelf || sportsShoe.activeSelf || oldShoe.activeSelf)
                 {
@@ -334,16 +384,14 @@ namespace a1Jam
 
                 playerLook.sprite = youngSprite;
 
-                //change price in UI element
-                s_hightopPrice.text = "Purchased";
-
                 //Update vehicle being used to correctly track upgrades
                 currentShoe = hightopShoe;
                 UpdateVehicleUpgrades();
 
                 // Update the vehicle script of selected shoe to hold the new reference for the Unusual Aftermath
-                vehicleController = currentShoe.GetComponent<VehicleController>();
-                vehicleController.UpdateUnusualAftermathScript();
+                vcScript = currentShoe.GetComponent<VehicleController>();
+                vcScript.UpdateUnusualAftermathScript();
+                //vcScript.canRotate = true;
 
                 //Activate young shoe
                 hightopShoe.SetActive(true);
@@ -355,10 +403,16 @@ namespace a1Jam
         // select sports shoe
         public void ActivateSportsShoe()
         {
-            if (GM.totalScore >= shoeSportsPrice)
+            if (GM.totalScore >= shoeSportsPrice || hasSportsShoe)
             {
                 //Spend points
-                GM.totalScore -= shoeSportsPrice;
+                if(!hasSportsShoe)
+                {
+                    GM.totalScore -= shoeSportsPrice;
+                    //change price in UI element
+                    s_sportsPriceText.text = "Purchased";
+                    hasSportsShoe = true;
+                }
                 //check for other vehicle active status
                 if (youngShoe.activeSelf || hightopShoe.activeSelf || oldShoe.activeSelf)
                 {
@@ -373,16 +427,14 @@ namespace a1Jam
 
                 playerLook.sprite = adultSprite;
 
-                //change price in UI element
-                s_sportsPrice.text = "Purchased";
-
                 //Update vehicle being used to correctly track upgrades
                 currentShoe = sportsShoe;
                 UpdateVehicleUpgrades();
 
                 // Update the vehicle script of selected shoe to hold the new reference for the Unusual Aftermath
-                vehicleController = currentShoe.GetComponent<VehicleController>();
-                vehicleController.UpdateUnusualAftermathScript();
+                vcScript = currentShoe.GetComponent<VehicleController>();
+                vcScript.UpdateUnusualAftermathScript();
+                //vcScript.canRotate = true;
 
                 //Activate young shoe
                 sportsShoe.SetActive(true);
@@ -394,10 +446,15 @@ namespace a1Jam
         // select old shoe
         public void ActivateOldShoe()
         {
-            if (GM.totalScore >= shoeOldPrice)
+            if (GM.totalScore >= shoeOldPrice || hasOldShoe)
             {
-                //Spend points
-                GM.totalScore -= shoeOldPrice;
+                if(!hasOldShoe)
+                {
+                    GM.totalScore -= shoeOldPrice;
+                    //change price in UI element
+                    s_oldPriceText.text = "Purchased";
+                    hasOldShoe = true;
+                }
                 //check for other vehicle active status
                 if (youngShoe.activeSelf || hightopShoe.activeSelf || sportsShoe.activeSelf)
                 {
@@ -412,16 +469,14 @@ namespace a1Jam
 
                 playerLook.sprite = elderlySprite;
 
-                //change price in UI element
-                s_oldPrice.text = "Purchased";
-
                 //Update vehicle being used to correctly track upgrades
                 currentShoe = oldShoe;
                 UpdateVehicleUpgrades();
 
                 // Update the vehicle script of selected shoe to hold the new reference for the Unusual Aftermath
-                vehicleController = currentShoe.GetComponent<VehicleController>();
-                vehicleController.UpdateUnusualAftermathScript();
+                vcScript = currentShoe.GetComponent<VehicleController>();
+                vcScript.UpdateUnusualAftermathScript();
+                //vcScript.canRotate = true;
 
                 //Activate young shoe
                 oldShoe.SetActive(true);

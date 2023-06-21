@@ -205,8 +205,9 @@ namespace a1Jam
                 // reset launchzones across the map
                 rrpScript.PlaceRandomPrefabs();
 
-                //update Vegicle
+                //update Vehicle and Vehicle Controllewr script (if car was upgraded)
                 vehicle = umScript.currentShoe;
+                vcScript = FindObjectOfType<VehicleController>();
 
                 // reset player position
                 player.transform.position = playerStartPos;
@@ -239,7 +240,9 @@ namespace a1Jam
                 canReset = false;
                 if(rcScript != null)
                     rcScript.canFireRocket = true;
-                
+                uaScript.canShakeCam = true;
+                vcScript.affectDrag = false;
+
                 // reset max height
                 maxHeight = 0;
                 heightText.text = "Height: " + maxHeight;

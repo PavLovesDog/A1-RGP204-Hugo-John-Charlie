@@ -538,7 +538,7 @@ MonoBehaviour:
   flipMultiplier: 0
   playerScore: 0
   highScore: 0
-  countdownTimer: 5
+  countdownTimer: 1.25
   scores: []
   totalScore: 0
   crashed: 0
@@ -1100,14 +1100,16 @@ MonoBehaviour:
   rocket1Price: 100
   rocket2Price: 300
   rocket3Price: 700
+  wingsPrice: 1000
   currencyText: {fileID: 497972994}
-  s_youngPrice: {fileID: 563021201}
-  s_hightopPrice: {fileID: 303835233}
-  s_sportsPrice: {fileID: 1483935980}
-  s_oldPrice: {fileID: 1328154917}
-  r_1Price: {fileID: 1341134054}
-  r_2Price: {fileID: 872065091}
-  r_3Price: {fileID: 198737481}
+  s_youngPriceText: {fileID: 563021201}
+  s_hightopPriceText: {fileID: 303835233}
+  s_sportsPriceText: {fileID: 1483935980}
+  s_oldPriceText: {fileID: 1328154917}
+  r_1PriceText: {fileID: 1341134054}
+  r_2PriceText: {fileID: 872065091}
+  r_3PriceText: {fileID: 198737481}
+  wingsText: {fileID: 1010715208}
   rocket_1: {fileID: 0}
   rocket_2: {fileID: 0}
   rocket_Large: {fileID: 0}
@@ -1117,10 +1119,16 @@ MonoBehaviour:
   rocket1Equipped: 0
   rocket2Equipped: 0
   rocket3Equipped: 0
+  wings: {fileID: 0}
+  ownsWings: 0
   youngShoe: {fileID: 135685074}
   hightopShoe: {fileID: 1191132597}
   sportsShoe: {fileID: 273452294}
   oldShoe: {fileID: 1342639348}
+  hasYoungShoe: 0
+  hasHightopShoe: 0
+  hasSportsShoe: 0
+  hasOldShoe: 0
 --- !u!4 &175631268
 Transform:
   m_ObjectHideFlags: 0
@@ -5123,10 +5131,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hightop_Shoe
       objectReference: {fileID: 0}
-    - target: {fileID: 4937862538444364864, guid: c80b5e4d33dcd274fa9c161d88b62318, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4937862538444364876, guid: c80b5e4d33dcd274fa9c161d88b62318, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -7979,7 +7983,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 275396370785201526, guid: 842cf55ba6c1f8b44be42221e2165843, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -120.19
+      value: -120.24
       objectReference: {fileID: 0}
     - target: {fileID: 275396370785201526, guid: 842cf55ba6c1f8b44be42221e2165843, type: 3}
       propertyPath: m_LocalPosition.y
@@ -8020,10 +8024,6 @@ PrefabInstance:
     - target: {fileID: 275396370785201530, guid: 842cf55ba6c1f8b44be42221e2165843, type: 3}
       propertyPath: m_Name
       value: Old_Shoe
-      objectReference: {fileID: 0}
-    - target: {fileID: 275396370785201530, guid: 842cf55ba6c1f8b44be42221e2165843, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 842cf55ba6c1f8b44be42221e2165843, type: 3}
@@ -8256,10 +8256,6 @@ PrefabInstance:
     - target: {fileID: 8787481057056445701, guid: afe9f45149d5090449175c23dc6142ed, type: 3}
       propertyPath: m_Name
       value: Sports_Shoe
-      objectReference: {fileID: 0}
-    - target: {fileID: 8787481057056445701, guid: afe9f45149d5090449175c23dc6142ed, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8787481057056445705, guid: afe9f45149d5090449175c23dc6142ed, type: 3}
       propertyPath: m_RootOrder
@@ -9536,7 +9532,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1163075530}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -8.7, z: 0}
+  m_LocalPosition: {x: 0, y: -8.62, z: 0}
   m_LocalScale: {x: 1, y: 16.35, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10138,7 +10134,7 @@ GameObject:
   - component: {fileID: 1310698950}
   m_Layer: 0
   m_Name: Ramp
-  m_TagString: Untagged
+  m_TagString: Ramp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12525,15 +12521,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 251592776534689940, guid: 49588b054bc35874e8a2697afefe2e90, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 251592776534689940, guid: 49588b054bc35874e8a2697afefe2e90, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 251592776534689940, guid: 49588b054bc35874e8a2697afefe2e90, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 251592776534689940, guid: 49588b054bc35874e8a2697afefe2e90, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -12637,7 +12633,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1587625863}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 175631267}
+        m_TargetAssemblyTypeName: a1Jam.UpgradeManager, Assembly-CSharp
+        m_MethodName: DeactivateWings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1587625863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13085,7 +13093,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1656656151
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14290,7 +14298,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1788532359}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 175631267}
+        m_TargetAssemblyTypeName: a1Jam.UpgradeManager, Assembly-CSharp
+        m_MethodName: ActivateWings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1788532359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14834,7 +14854,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839376454}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -110.96997, y: 17.76, z: 0}
+  m_LocalPosition: {x: -121.6, y: 19.74, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15800,7 +15820,7 @@ GameObject:
   - component: {fileID: 1947878488}
   m_Layer: 0
   m_Name: Big_Foot
-  m_TagString: checkPoint
+  m_TagString: BigFoot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15886,7 +15906,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPosition: {fileID: 1839376457}
   lerpDuration: 0.1
-  startDelay: 3
+  startDelay: 2.5
+  canShakeCam: 1
   delayTimer: 0
 --- !u!61 &1947878488
 BoxCollider2D:
