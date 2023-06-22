@@ -61,6 +61,12 @@ namespace a1Jam
                 Vector2 direction = transform.right; // Get the direction the vehicle is facing
                 vehicleRB.AddForce(direction * speed); // Add a force in the direction the vehicle is facing
             }
+            
+            // reset drag if not needed
+            if(!affectDrag)
+            {
+                vehicleRB.drag = 0;
+            }
 
             // Vehicle Rotation ----------------------------------------------------------------------------------------------
             if (canRotate)
