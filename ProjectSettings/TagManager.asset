@@ -15,6 +15,7 @@ TagManager:
   - BigFoot
   - Wings
   - Ramp
+  - MaxPoints
   layers:
   - Default
   - TransparentFX

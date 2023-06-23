@@ -26,6 +26,8 @@ namespace a1Jam
 
         //Tracking Variables
         public bool beginTracking = false;
+        public bool maxPoints = false;
+        public float maxPointMultiplier;
         public float maxDistance;
         public float maxHeight = 0;
         public int numFlips = 0;
@@ -40,9 +42,13 @@ namespace a1Jam
         public float totalScore;
 
         //Game State Variables
+        public bool gameRunning = false;
         public bool crashed = false;
         public bool canReset = false;
         public bool canDisplayEndScreen = true;
+
+        //Title UI
+        public GameObject TitleScreen;
 
         //UI Overlay variables
         public GameObject UI_OverlayPanel;
@@ -57,6 +63,7 @@ namespace a1Jam
 
         //Scoring Overlay Variables
         public GameObject s_scoringPanel;
+        public GameObject maxPointsText;
         public TMP_Text s_distanceCalcText;
         public TMP_Text s_heightCalcText;
         public TMP_Text s_flipCalcText;
@@ -92,17 +99,14 @@ namespace a1Jam
             tmScript = FindObjectOfType<TimeManager>();
             umScript = FindObjectOfType<UpgradeManager>();
             uaScript = FindObjectOfType<UnusualAftermath>();
-
-            //TODO !!!!!!!!!!!!!! JOHN, Set up script reference here, (if it's going to be attached to a single gameobject) !!!!!!!!!!!!!!!!!!!
             rrpScript = FindObjectOfType<RandomPrefabPlacer>();
-
             playerSpawnPoint = FindObjectOfType<SpawnMe>().gameObject;
             vehicle = FindObjectOfType<VehicleController>().gameObject; // load whatever vehicle is in the scene
 
             //Tracking variables etuo
             heightBase = measurePoint.transform.position.y; // set the base for max height
-            scorePanel.SetActive(false);
-            scoreText.gameObject.SetActive(false); // turn off score display
+            //scorePanel.SetActive(false);
+            //scoreText.gameObject.SetActive(false); // turn off score display
             wipeoutText.gameObject.SetActive(false);
 
             //Store positions for reset
@@ -111,11 +115,28 @@ namespace a1Jam
             vehicleStartPos = vehicle.transform.position;
             vehicleRotation = vehicle.transform.rotation;
             player.transform.position = playerSpawnPoint.transform.position; // set pplayers p[osition on start
+
+            //setup highscore if there is one
+            if (PlayerPrefs.HasKey("Highscore"))
+            {
+                highScore = PlayerPrefs.GetFloat("Highscore");
+                Debug.Log("Loaded high score: " + Mathf.Ceil(highScore));
+            }
+            else
+            {
+                Debug.Log("No high score saved!");
+            }
         }
     
     
         void Update()
         {
+            if(Input.GetKeyUp(KeyCode.Escape))
+            {
+                //player wants to exit
+                Application.Quit();
+            }
+
             //Track distance & height from player to flight check -----------------------------------------------------
             if(beginTracking && playerScript != null)
             {
@@ -173,6 +194,14 @@ namespace a1Jam
                     break;
             }
 
+            //check for maxpoint multiplier
+            if(maxPoints)
+            {
+                flipMultiplier = maxPointMultiplier;
+                playerScore = playerScore * maxPointMultiplier;
+
+            }
+
             if (crashed)
             {
                 playerScore *= 0.1f; // deduct points for failure
@@ -187,14 +216,32 @@ namespace a1Jam
             foreach (var score in scores)
             {
                 if (score > highScore)
+                {
                     highScore = score;
+
+                    //save highscore to disk
+                    //PlayerPrefs.SetInt("Highscore", (int)Mathf.Ceil(highScore));
+                    PlayerPrefs.SetFloat("Highscore", highScore);
+                    PlayerPrefs.Save();
+                }
             }
 
             // update UI scores
             totalScoreText.text = "Score: " + totalScore;
             highScoreText.text = "Highscore: " + highScore;
+        }
 
-            //display scoring overlay
+        public void StartGame()
+        {
+            gameRunning = true;
+
+            // turn off title screen
+            if(TitleScreen.activeSelf)
+                TitleScreen.SetActive(false);
+
+            //enable UI screen overlay
+            if (!TitleScreen.activeSelf)
+                UI_OverlayPanel.SetActive(true);
         }
 
         public void ResetDriver()
@@ -230,6 +277,7 @@ namespace a1Jam
                 rcScript = FindObjectOfType<RocketControl>();
 
                 //reset bools
+                maxPoints = false;
                 canDisplayEndScreen = true;
                 vcScript.isOnGround = false;
                 beginTracking = false;
@@ -266,8 +314,8 @@ namespace a1Jam
 
                 // set UI elements correctly
                 UI_OverlayPanel.SetActive(true);
-                scorePanel.SetActive(false);
-                scoreText.gameObject.SetActive(false);
+                //scorePanel.SetActive(false);
+                //scoreText.gameObject.SetActive(false);
                 wipeoutText.gameObject.SetActive(false);
                 if(u_upgradePanel.activeSelf)
                     u_upgradePanel.SetActive(false);
@@ -312,7 +360,18 @@ namespace a1Jam
             // calculate scores
             s_distanceCalcText.text = Mathf.Ceil(maxDistance) + "m x 0.25 =    " + Mathf.Ceil(maxDistance / 4); 
             s_heightCalcText.text = Mathf.Ceil(maxHeight) + "m x 0.5 =    " + Mathf.Ceil(maxHeight / 2);
-            s_flipCalcText.text = numFlips + " =    x" + flipMultiplier;
+            if(maxPoints)
+            {
+                maxPointsText.SetActive(true);
+                s_flipCalcText.text = numFlips + " =    x" + maxPointMultiplier;
+                s_flipCalcText.color = Color.green;
+            }
+            else
+            {
+                maxPointsText.SetActive(false);
+                s_flipCalcText.text = numFlips + " =    x" + flipMultiplier;
+                s_flipCalcText.color = Color.white;
+            }
             if(crashed)
             {
                 s_crashedCalcTest.text = "               =    x0.1";
@@ -325,9 +384,6 @@ namespace a1Jam
             }
             s_totalScorePointsText.text = "Score: " + Mathf.Ceil(playerScore);
 
-            //if(!scorePanel.activeSelf)
-            scorePanel.SetActive(true);
-            scoreText.gameObject.SetActive(true);
             canReset = true;
         }
     }
