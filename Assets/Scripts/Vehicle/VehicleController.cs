@@ -8,6 +8,7 @@ namespace a1Jam
     {
         //Script References
         GameManager GM;
+        AudioManager AM;
 
         // For Unusual Aftermath
         public UnusualAftermath unusualAftermath;
@@ -46,6 +47,7 @@ namespace a1Jam
         {
             unusualAftermath = FindObjectOfType<UnusualAftermath>();
             GM = FindObjectOfType<GameManager>();
+            AM = FindObjectOfType<AudioManager>();
             vehicleRB = GetComponent<Rigidbody2D>(); 
             rcColliders = GetComponentsInChildren<Collider2D>();
 
@@ -61,6 +63,11 @@ namespace a1Jam
                 {
                     Vector2 direction = transform.right; // Get the direction the vehicle is facing
                     vehicleRB.AddForce(direction * speed); // Add a force in the direction the vehicle is facing
+                    AM.PlayAudioOneShot(AM.accelerationSource, AM.accelerationSound, 1f);
+                }
+                else
+                {
+                    AM.StopSound(AM.accelerationSource);
                 }
 
                 // reset drag if not needed
